@@ -7,7 +7,8 @@ import {
   getPrimaryImage,
   isFeaturedRestaurant,
   getFeaturedText,
-  formatCategory
+  formatCategory,
+  formatPriceRange
 } from '~/utils/formatters';
 import { renderIcon } from '~/utils/icon-mapper';
 import { OptimizedImage } from './optimized-image';
@@ -102,7 +103,7 @@ export const RestaurantCard: React.FC<RestaurantCardProps> = ({
           <span className="mx-1">·</span>
           <span>{formatCategory(restaurant.category)}</span>
           <span className="mx-1">·</span>
-          <span>{restaurant.price_range}</span>
+          <span>{formatPriceRange(restaurant.price_range)}</span>
         </div>
       </div>
     </div>
