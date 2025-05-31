@@ -1,4 +1,5 @@
 import { type STORE_CATEGORY } from '@prisma/client';
+import { type MouseEvent } from 'react';
 
 export interface User {
   id: string;
@@ -50,8 +51,8 @@ export type LoadingState = 'idle' | 'loading' | 'error' | 'success';
 // UI Component Props
 export interface RestaurantCardProps {
   restaurant: Restaurant;
-  onFavoriteToggle: (restaurantId: string, isFavorite: boolean) => Promise<void>;
-  isLoading: boolean;
+  onFavoriteClick: (e: MouseEvent) => void;
+  isToggling?: boolean;
 }
 
 export interface ErrorDisplayProps {
