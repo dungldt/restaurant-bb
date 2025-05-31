@@ -1,10 +1,10 @@
 import React from 'react';
+import { RestaurantList } from '~/components/restaurant-list';
 
 const HomePage = () => {
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen">
-      <h1 className="text-4xl font-bold">Welcome to My Next.js App</h1>
-      <p className="mt-4 text-lg">This is the main entry point of the application.</p>
+    <div className="min-h-screen bg-gray-50">
+      <RestaurantList />
     </div>
   );
 };
