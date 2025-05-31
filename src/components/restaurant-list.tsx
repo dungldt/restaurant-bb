@@ -42,7 +42,10 @@ export function RestaurantList() {
 
   return (
     <div className={CSS_CLASSES.CONTAINER}>
-      <h1 className="text-3xl font-bold mb-6">Restaurants</h1>
+      <div className="text-center mb-8">
+        <h1 className="text-4xl font-bold text-gray-900 mb-2">Restaurants</h1>
+        <p className="text-gray-600">Discover amazing restaurants near you</p>
+      </div>
       <div className={CSS_CLASSES.GRID}>
         {restaurants.map((restaurant: Restaurant) => (
           <RestaurantCard
