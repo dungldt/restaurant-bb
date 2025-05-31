@@ -9,6 +9,7 @@ import {
 } from '~/utils/formatters';
 import { renderIcon } from '~/utils/icon-mapper';
 import { CSS_CLASSES } from '~/constants';
+import { OptimizedImage } from './optimized-image';
 
 export const RestaurantCard: React.FC<RestaurantCardProps> = ({ 
   restaurant, 
@@ -38,10 +39,14 @@ export const RestaurantCard: React.FC<RestaurantCardProps> = ({
       {/* Image Container with Favorite Button */}
       <div className="relative">
         {primaryImage && (
-          <img
+          <OptimizedImage
             src={primaryImage}
             alt={restaurant.name}
+            width={400}
+            height={200}
             className={CSS_CLASSES.CARD_IMAGE}
+            priority={false}
+            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
           />
         )}
         {/* Favorite Button on Top Right */}
