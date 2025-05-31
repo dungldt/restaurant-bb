@@ -13,7 +13,7 @@ model Restaurant {
   description String?    @map("desc")
   rating      Float      @default(0)
   ratingCount Int        @default(0) @map("rating_count")
-  category    Category
+  category    STORE_CATEGORY
   city        String
   location    String?
   priceRange  String     @map("price_range") // e.g., "3~5" meaning 3000-5000 yen
@@ -39,18 +39,30 @@ model Favorite {
   @@map("favorites")
 }
 
-enum Category {
-  ENTIRE
-  RAMEN_TSUKEMEN
-  TONKATSU_KUSHIKATSU
-  SOBA_UDON
-  OKONOMIYAKI_TAKOYAKI
-  SUKIYAKI_SHABU_SHABU
+enum STORE_CATEGORY {
+  SUSHI
+  UNAGI
   TEMPURA
-  EEL
-  YAKITORI_SKEWER
+  TONKATSU
+  YAKITORI
+  SUKIYAKI
+  SOBA
+  RAMEN
+  YAKISOBA
+  OKONOMIYAKI
+  DONBURI
+  ODEN
+  KAISEKI
+  HAMBAGU
+  TEPPANYAKI
+  CURRY
+  YAKINIKU
+  NABE
+  CAFE
+  IZAKAYA
+  OTHER
 
-  @@map("categories")
+  @@map("store_categories")
 }
 
 datasource db {
