@@ -15,6 +15,7 @@ export interface UseRestaurantsWithFiltersReturn {
   handleSearchChange: (query: string) => void;
   handleCategoryChange: (category: STORE_CATEGORY | 'ALL') => void;
   refetch: () => void;
+  getRestaurantToggleState: (restaurantId: string) => boolean;
 }
 
 /**
@@ -30,7 +31,8 @@ export const useRestaurantsWithFilters = (): UseRestaurantsWithFiltersReturn => 
     error,
     isToggling,
     handleFavoriteToggle,
-    refetch
+    refetch,
+    getRestaurantToggleState
   } = useRestaurants();
 
   // Filter restaurants based on search query and selected category
@@ -72,5 +74,6 @@ export const useRestaurantsWithFilters = (): UseRestaurantsWithFiltersReturn => 
     handleSearchChange,
     handleCategoryChange,
     refetch,
+    getRestaurantToggleState,
   };
 };

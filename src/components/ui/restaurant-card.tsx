@@ -1,27 +1,29 @@
-import React from 'react';
+"use client";
+
+import React, { useState } from 'react';
+import { Heart, Loader2 } from 'lucide-react';
 import { type RestaurantCardProps } from '~/types';
 import {
-  formatCity,
   getPrimaryImage,
   isFeaturedRestaurant,
   getFeaturedText,
-  formatCategory
+  formatCategory,
+  formatPriceRange
 } from '~/utils/formatters';
 import { renderIcon } from '~/utils/icon-mapper';
-import { CSS_CLASSES } from '~/constants';
 import { OptimizedImage } from './optimized-image';
 
-export const RestaurantCard: React.FC<RestaurantCardProps> = ({ 
-  restaurant, 
-  onFavoriteToggle, 
-  isLoading 
+export const RestaurantCard: React.FC<RestaurantCardProps> = ({
+  restaurant,
+  onFavoriteClick,
+  isToggling = false
 }) => {
   const primaryImage = getPrimaryImage(restaurant.images);
   const hasFeatured = isFeaturedRestaurant(restaurant.featured);
   const featuredText = getFeaturedText(restaurant.featured);
 
-  const handleFavoriteClick = async () => {
-    await onFavoriteToggle(restaurant.id, restaurant.isFavorite);
+  const handleClick = (e: React.MouseEvent) => {
+    onFavoriteClick(e);
   };
 
   // Function to render icon based on icon name from data
@@ -35,7 +37,7 @@ export const RestaurantCard: React.FC<RestaurantCardProps> = ({
   };
 
   return (
-    <div className={CSS_CLASSES.CARD}>
+    <div className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow duration-200">
       {/* Image Container with Favorite Button */}
       <div className="relative">
         {primaryImage && (
@@ -44,39 +46,38 @@ export const RestaurantCard: React.FC<RestaurantCardProps> = ({
             alt={restaurant.name}
             width={400}
             height={200}
-            className={CSS_CLASSES.CARD_IMAGE}
+            className="w-full h-48 object-cover"
             priority={false}
             sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
           />
         )}
         {/* Favorite Button on Top Right */}
         <button
-          onClick={handleFavoriteClick}
-          className={`${CSS_CLASSES.BUTTON_FAVORITE_OVERLAY} ${
-            restaurant.isFavorite
-              ? CSS_CLASSES.BUTTON_FAVORITE_ACTIVE
-              : CSS_CLASSES.BUTTON_FAVORITE_INACTIVE
-          }`}
-          disabled={isLoading}
+          onClick={handleClick}
+          className={`absolute top-2 right-2 p-1.5 rounded-full bg-white bg-opacity-40 backdrop-blur-sm transition-all duration-200 hover:bg-opacity-60 hover:shadow-md shadow-sm focus:outline-none focus:none ${
+            isToggling ? 'cursor-wait' : ''
+          } hover:scale-105 transform transition-all duration-150 ease-in-out`}
           aria-label={restaurant.isFavorite ? 'Remove from favorites' : 'Add to favorites'}
+          disabled={isToggling}
         >
-          {restaurant.isFavorite ? (
-            <svg className="w-4 h-4 text-red-500" fill="currentColor" viewBox="0 0 20 20">
-              <path fillRule="evenodd" d="M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656L10 17.657l-6.828-6.829a4 4 0 010-5.656z" clipRule="evenodd" />
-            </svg>
+          {isToggling ? (
+            <Loader2 className="w-4 h-4 animate-spin text-gray-600" />
           ) : (
-            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
-            </svg>
+            <Heart
+              className={`w-4 h-4 transition-all duration-200 ${
+                restaurant.isFavorite ? 'text-red-600' : 'text-white'
+              }`}
+              fill={restaurant.isFavorite ? "currentColor" : "none"}
+            />
           )}
         </button>
       </div>
 
-      <div className={CSS_CLASSES.CARD_CONTENT}>
+      <div className="p-4">
         {/* Featured Badge */}
         {hasFeatured && (
           <div className="mb-2">
-            <div className={CSS_CLASSES.BADGE_FEATURED_NEW}>
+            <div className="inline-flex items-center text-orange-600 text-xs px-0 py-1 rounded-sm font-normal">
               {restaurant.featured?.icon && renderFeaturedIcon(restaurant.featured.icon)}
               <span>{featuredText}</span>
             </div>
@@ -98,11 +99,11 @@ export const RestaurantCard: React.FC<RestaurantCardProps> = ({
         
         {/* Location, Category, and Price Range */}
         <div className="text-sm text-gray-500 mb-2">
-          <span className='uppercase'>{formatCity(restaurant.city)}</span>
+          <span className='uppercase'>{restaurant.city}</span>
           <span className="mx-1">·</span>
           <span>{formatCategory(restaurant.category)}</span>
           <span className="mx-1">·</span>
-          <span>{restaurant.price_range}</span>
+          <span>{formatPriceRange(restaurant.price_range)}</span>
         </div>
       </div>
     </div>
