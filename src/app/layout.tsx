@@ -1,7 +1,7 @@
 import React from 'react';
 import './globals.css';
 import { TRPCProvider } from '~/components/providers/trpc-provider';
-import { ErrorBoundary } from '~/components/ui';
+import { ErrorBoundary, ToastProvider } from '~/components/ui';
 
 export const metadata = {
   title: 'Restaurant App',
@@ -14,7 +14,9 @@ const RootLayout = ({ children }: { children: React.ReactNode }) => {
       <body>
         <ErrorBoundary>
           <TRPCProvider>
-            {children}
+            <ToastProvider>
+              {children}
+            </ToastProvider>
           </TRPCProvider>
         </ErrorBoundary>
       </body>

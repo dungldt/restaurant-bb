@@ -1,7 +1,8 @@
-import { useCallback, useMemo } from 'react';
+import { useCallback, useMemo, useRef, useState, useEffect } from 'react';
 import { api } from '~/utils/api';
 import { type Restaurant, type RestaurantFeatured } from '~/types';
 import { UI_MESSAGES } from '~/constants';
+import { useToast } from '~/components/ui';
 
 export interface UseRestaurantsReturn {
   restaurants: Restaurant[] | undefined;
@@ -10,6 +11,13 @@ export interface UseRestaurantsReturn {
   isToggling: boolean;
   handleFavoriteToggle: (restaurantId: string, isFavorite: boolean) => Promise<void>;
   refetch: () => void;
+  getRestaurantToggleState: (restaurantId: string) => boolean;
+}
+
+interface PendingToggle {
+  restaurantId: string;
+  targetState: boolean;
+  timeoutId: NodeJS.Timeout;
 }
 
 /**
@@ -36,6 +44,12 @@ const transformRestaurantData = (rawData: any[]): Restaurant[] => {
 
 export const useRestaurants = (): UseRestaurantsReturn => {
   const utils = api.useUtils();
+  const { showToast } = useToast();
+  const [optimisticFavorites, setOptimisticFavorites] = useState<Map<string, boolean>>(new Map());
+  const [pendingToggles, setPendingToggles] = useState<Map<string, PendingToggle>>(new Map());
+  const [togglingRestaurants, setTogglingRestaurants] = useState<Set<string>>(new Set());
+  
+  const debounceTimeoutRef = useRef<Map<string, NodeJS.Timeout>>(new Map());
 
   const {
     data: rawRestaurants,
@@ -44,46 +58,160 @@ export const useRestaurants = (): UseRestaurantsReturn => {
     refetch
   } = api.restaurant.getRestaurants.useQuery();
 
-  // Transform the data to match our Restaurant type
+  // Transform the data to match our Restaurant type with optimistic updates
   const restaurants = useMemo(() => {
     if (!rawRestaurants) return undefined;
-    return transformRestaurantData(rawRestaurants);
-  }, [rawRestaurants]);
+    const transformed = transformRestaurantData(rawRestaurants);
+    
+    // Apply optimistic updates
+    return transformed.map(restaurant => {
+      const optimisticState = optimisticFavorites.get(restaurant.id);
+      return optimisticState !== undefined 
+        ? { ...restaurant, isFavorite: optimisticState }
+        : restaurant;
+    });
+  }, [rawRestaurants, optimisticFavorites]);
 
   // Convert tRPC error to string
   const error = queryError ? queryError.message : null;
+
   const addFavoriteMutation = api.restaurant.addFavorite.useMutation({
-    onSuccess: () => {
-      utils.restaurant.getRestaurants.invalidate();
+    onSuccess: (data, variables) => {
+      // Show toast immediately
+      showToast(UI_MESSAGES.RESTAURANT_ADDED_TO_FAVORITES, 'success', 2000);
+      
+      // Disappear Loader2 shortly after toast appears (small delay for UX smoothness)
+      setTimeout(async () => {
+        // First invalidate to get fresh server state
+        await utils.restaurant.getRestaurants.invalidate();
+        
+        // Then clear optimistic state and toggling state together
+        // This ensures we go directly from Loader2 to correct final state
+        setOptimisticFavorites(prev => {
+          const newMap = new Map(prev);
+          newMap.delete(variables.restaurantId);
+          return newMap;
+        });
+        
+        setTogglingRestaurants(prev => {
+          const newSet = new Set(prev);
+          newSet.delete(variables.restaurantId);
+          return newSet;
+        });
+      }, 200); // Short delay after toast appears for smooth UX
     },
-    onError: (error) => {
+    onError: (error, variables) => {
       console.error(UI_MESSAGES.ERROR_TOGGLING_FAVORITE, error);
+      showToast(UI_MESSAGES.ERROR_TOGGLING_FAVORITE, 'error', 3000);
+      // Revert optimistic update on error
+      setOptimisticFavorites(prev => {
+        const next = new Map(prev);
+        next.delete(variables.restaurantId);
+        return next;
+      });
+      setTogglingRestaurants(prev => {
+        const next = new Set(prev);
+        next.delete(variables.restaurantId);
+        return next;
+      });
     },
   });
 
   const removeFavoriteMutation = api.restaurant.removeFavorite.useMutation({
-    onSuccess: () => {
-      utils.restaurant.getRestaurants.invalidate();
+    onSuccess: (data, variables) => {
+      // Show toast immediately
+      showToast(UI_MESSAGES.RESTAURANT_REMOVED_FROM_FAVORITES, 'success', 2000);
+      // Disappear Loader2 shortly after toast appears (small delay for UX smoothness)
+      setTimeout(async () => {
+        
+        // First invalidate to get fresh server state
+        await utils.restaurant.getRestaurants.invalidate();
+        
+        // Then clear optimistic state and toggling state together
+        // This ensures we go directly from Loader2 to correct final state
+        setOptimisticFavorites(prev => {
+          const newMap = new Map(prev);
+          newMap.delete(variables.restaurantId);
+          return newMap;
+        });
+        
+        setTogglingRestaurants(prev => {
+          const newSet = new Set(prev);
+          newSet.delete(variables.restaurantId);
+          return newSet;
+        });
+      }, 200); // Short delay after toast appears for smooth UX
     },
-    onError: (error) => {
+    onError: (error, variables) => {
       console.error(UI_MESSAGES.ERROR_TOGGLING_FAVORITE, error);
+      showToast(UI_MESSAGES.ERROR_TOGGLING_FAVORITE, 'error', 3000);
+      // Revert optimistic update on error
+      setOptimisticFavorites(prev => {
+        const next = new Map(prev);
+        next.delete(variables.restaurantId);
+        return next;
+      });
+      setTogglingRestaurants(prev => {
+        const next = new Set(prev);
+        next.delete(variables.restaurantId);
+        return next;
+      });
     },
   });
 
-  const handleFavoriteToggle = useCallback(async (restaurantId: string, isFavorite: boolean) => {
-    try {
-      if (isFavorite) {
-        await removeFavoriteMutation.mutateAsync({ restaurantId });
-      } else {
-        await addFavoriteMutation.mutateAsync({ restaurantId });
-      }
-    } catch (error) {
-      console.error(UI_MESSAGES.ERROR_TOGGLING_FAVORITE, error);
-      throw error;
+  const handleFavoriteToggle = useCallback(async (restaurantId: string, currentIsFavorite: boolean) => {
+    const targetState = !currentIsFavorite;
+    // Set toggling state IMMEDIATELY when user clicks
+    setTogglingRestaurants(prev => new Set(prev).add(restaurantId));
+    
+    // Apply optimistic update immediately
+    setOptimisticFavorites(prev => {
+      const next = new Map(prev);
+      next.set(restaurantId, targetState);
+      return next;
+    });
+
+    // Clear any existing debounce timeout for this restaurant
+    const existingTimeout = debounceTimeoutRef.current.get(restaurantId);
+    if (existingTimeout) {
+      clearTimeout(existingTimeout);
     }
+
+    // Set up debounced API call
+    const timeoutId = setTimeout(async () => {
+      try {
+        if (targetState) {
+          await addFavoriteMutation.mutateAsync({ restaurantId });
+        } else {
+          await removeFavoriteMutation.mutateAsync({ restaurantId });
+        }
+      } catch (error) {
+        // Error handling is done in mutation callbacks
+        console.error('Toggle error:', error);
+      }
+      
+      // Clean up timeout reference
+      debounceTimeoutRef.current.delete(restaurantId);
+    }, 500); // 500ms debounce
+
+    // Store timeout reference
+    debounceTimeoutRef.current.set(restaurantId, timeoutId);
   }, [addFavoriteMutation, removeFavoriteMutation]);
 
-  const isToggling = addFavoriteMutation.isPending || removeFavoriteMutation.isPending;
+  // Helper function to check if a restaurant is currently being toggled
+  const getRestaurantToggleState = useCallback((restaurantId: string): boolean => {
+    return togglingRestaurants.has(restaurantId);
+  }, [togglingRestaurants]);
+
+  const isToggling = addFavoriteMutation.isPending || removeFavoriteMutation.isPending || togglingRestaurants.size > 0;
+
+  // Cleanup timeouts on unmount
+  useEffect(() => {
+    return () => {
+      debounceTimeoutRef.current.forEach(timeout => clearTimeout(timeout));
+      debounceTimeoutRef.current.clear();
+    };
+  }, []);
 
   return {
     restaurants,
@@ -92,5 +220,6 @@ export const useRestaurants = (): UseRestaurantsReturn => {
     isToggling,
     handleFavoriteToggle,
     refetch: () => refetch(),
+    getRestaurantToggleState,
   };
 };
