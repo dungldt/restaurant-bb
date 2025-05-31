@@ -1,6 +1,6 @@
 import React from 'react';
 import { type STORE_CATEGORY } from '@prisma/client';
-import { getFilterCategories, CSS_CLASSES } from '~/constants';
+import { getFilterCategories } from '~/constants';
 
 interface SearchAndFilterProps {
   searchQuery: string;
@@ -41,7 +41,7 @@ export const SearchAndFilter: React.FC<SearchAndFilterProps> = ({
           placeholder="Search for the name of the restaurant"
           value={searchQuery}
           onChange={(e) => onSearchChange(e.target.value)}
-          className={CSS_CLASSES.SEARCH_INPUT}
+          className="w-full px-4 py-3 pl-10 rounded-lg border border-gray-300 focus:outline-none focus:none focus:border-transparent shadow-lg"
         />
       </div>
 
@@ -52,10 +52,10 @@ export const SearchAndFilter: React.FC<SearchAndFilterProps> = ({
             <button
               key={category.key}
               onClick={() => onCategoryChange(category.key)}
-              className={`${CSS_CLASSES.FILTER_BUTTON} ${
+              className={`px-4 py-2 text-sm font-medium rounded-md transition-colors duration-200 ${
                 selectedCategory === category.key
-                  ? CSS_CLASSES.FILTER_BUTTON_ACTIVE
-                  : CSS_CLASSES.FILTER_BUTTON_INACTIVE
+                  ? 'bg-gray-300 text-gray-500'
+                  : 'bg-gray-100 text-gray-500 hover:bg-gray-200 hover:text-gray-700'
               } whitespace-nowrap flex-shrink-0`}
             >
               {category.label}
