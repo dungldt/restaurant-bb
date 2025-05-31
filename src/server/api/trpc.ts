@@ -1,13 +1,11 @@
-import { TRPCError, initTRPC } from '@trpc/server';
-import { type CreateNextContextOptions } from '@trpc/server/adapters/next';
-import { z } from 'zod';
+import { initTRPC } from '@trpc/server';
+import { type FetchCreateContextFnOptions } from '@trpc/server/adapters/fetch';
 import { db } from '../db';
 
-export const createTRPCContext = (opts: CreateNextContextOptions) => {
-  const { req, res } = opts;
+export const createTRPCContext = (opts: FetchCreateContextFnOptions) => {
+  const { req } = opts;
   return {
     req,
-    res,
     db,
   };
 };
