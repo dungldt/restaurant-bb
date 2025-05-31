@@ -23,7 +23,7 @@ async function main() {
       location: "Yokohama",
       priceRange: "5~7",
       images: [
-        "https://images.unsplash.com/photo-1604908177732-40aa343c3f2b?q=80&w=1887&auto=format&fit=crop&ixlib=rb-4.0.3"
+        "https://images.unsplash.com/photo-1673238104258-38b63f973848?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.1.0"
       ],
       featured: {
         text: "Recommended Yokohama Tempura",
@@ -40,7 +40,7 @@ async function main() {
       location: "Sapporo",
       priceRange: "4~6",
       images: [
-        "https://images.unsplash.com/photo-1547592180-2f1a1b3c3b68?q=80&w=1887&auto=format&fit=crop&ixlib=rb-4.0.3"
+        "https://plus.unsplash.com/premium_photo-1668146932065-d08643791942?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.1.0"
       ],
       featured: {
         text: "Sapporo Sushi Restaurant",
@@ -57,7 +57,7 @@ async function main() {
       location: "Kyoto",
       priceRange: "2~4",
       images: [
-        "https://images.unsplash.com/photo-1586190848861-99aa4a171e90?q=80&w=1887&auto=format&fit=crop&ixlib=rb-4.0.3"
+        "https://images.unsplash.com/photo-1591325418441-ff678baf78ef?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.1.0"
       ],
       featured: {
         text: "Kyoto's best ramen spots",
@@ -74,7 +74,7 @@ async function main() {
       location: "Fukuoka",
       priceRange: "2~4",
       images: [
-        "https://images.unsplash.com/photo-1570544826585-8dd0cf1d2aa8?q=80&w=1887&auto=format&fit=crop&ixlib=rb-4.0.3"
+        "https://images.unsplash.com/photo-1611810175414-1ea054685162?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.1.0"
       ],
       featured: {
         text: "Fukuoka Udon Restaurant",
