@@ -1,5 +1,6 @@
 import { z } from 'zod';
 import { createTRPCRouter, publicProcedure } from '../trpc';
+import { MOCK_USER_ID, MOCK_USER_EMAIL, MOCK_USER_NAME } from '~/constants';
 
 export const restaurantRouter = createTRPCRouter({
   getRestaurants: publicProcedure.query(async ({ ctx }) => {
@@ -13,9 +14,6 @@ export const restaurantRouter = createTRPCRouter({
     });
 
     // Transform the data to match the expected format with isFavorite
-    // Using a mock userId for now
-    const mockUserId = 'mock-user-id';
-    
     return restaurants.map((restaurant) => ({
       id: restaurant.id,
       name: restaurant.name,
@@ -28,7 +26,7 @@ export const restaurantRouter = createTRPCRouter({
       price_range: restaurant.priceRange,
       images: restaurant.images,
       featured: restaurant.featured,
-      isFavorite: restaurant.favorites.some(fav => fav.userId === mockUserId),
+      isFavorite: restaurant.favorites.some(fav => fav.userId === MOCK_USER_ID),
     }));
   }),
 
@@ -37,17 +35,14 @@ export const restaurantRouter = createTRPCRouter({
       restaurantId: z.string() 
     }))
     .mutation(async ({ input, ctx }) => {
-      // Using a mock userId for now
-      const mockUserId = 'mock-user-id';
-      
       // First, ensure the user exists (create if not)
       await ctx.db.user.upsert({
-        where: { id: mockUserId },
+        where: { id: MOCK_USER_ID },
         update: {},
         create: {
-          id: mockUserId,
-          email: 'mock@example.com',
-          name: 'Mock User',
+          id: MOCK_USER_ID,
+          email: MOCK_USER_EMAIL,
+          name: MOCK_USER_NAME,
         },
       });
 
@@ -55,13 +50,13 @@ export const restaurantRouter = createTRPCRouter({
       const favorite = await ctx.db.favorite.upsert({
         where: {
           userId_restaurantId: {
-            userId: mockUserId,
+            userId: MOCK_USER_ID,
             restaurantId: input.restaurantId,
           },
         },
         update: {},
         create: {
-          userId: mockUserId,
+          userId: MOCK_USER_ID,
           restaurantId: input.restaurantId,
         },
         include: {
@@ -80,12 +75,9 @@ export const restaurantRouter = createTRPCRouter({
       restaurantId: z.string() 
     }))
     .mutation(async ({ input, ctx }) => {
-      // Using a mock userId for now
-      const mockUserId = 'mock-user-id';
-      
       await ctx.db.favorite.deleteMany({
         where: {
-          userId: mockUserId,
+          userId: MOCK_USER_ID,
           restaurantId: input.restaurantId,
         },
       });
