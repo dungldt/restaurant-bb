@@ -1,11 +1,11 @@
 import { type Restaurant, type RestaurantFeatured } from '~/types';
-import { CATEGORY_DISPLAY_NAMES } from '~/constants';
+import { textByStoreCategory } from '~/constants';
 
 /**
  * Formats the restaurant category for display
  */
 export const formatCategory = (category: Restaurant['category']): string => {
-  return CATEGORY_DISPLAY_NAMES[category] || category;
+  return textByStoreCategory[category] || category;
 };
 
 /**
