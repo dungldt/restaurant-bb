@@ -80,22 +80,4 @@ export const getFilterCategories = (): Array<{ key: STORE_CATEGORY | 'ALL'; labe
   ];
 };
 
-// CSS Classes for reusability
-export const CSS_CLASSES = {
-  CARD: 'bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow duration-200',
-  CARD_IMAGE: 'w-full h-48 object-cover',
-  CARD_CONTENT: 'p-4',
-  BUTTON_FAVORITE: 'p-2 rounded-full transition-colors duration-200',
-  BUTTON_FAVORITE_OVERLAY: 'absolute top-2 right-2 p-1.5 rounded-full bg-white bg-opacity-40 backdrop-blur-sm transition-all duration-200 hover:bg-opacity-20 shadow-sm',
-  BUTTON_FAVORITE_ACTIVE: 'text-red-500',
-  BUTTON_FAVORITE_INACTIVE: 'text-white',
-  BADGE_CATEGORY: 'bg-blue-100 text-blue-800 text-xs px-2 py-1 rounded-full font-medium',
-  BADGE_FEATURED: 'mt-2 bg-yellow-100 text-yellow-800 text-xs px-2 py-1 rounded',
-  BADGE_FEATURED_NEW: 'inline-flex items-center text-orange-600 text-xs px-0 py-1 rounded-sm font-normal',
-  GRID: 'grid gap-6 grid-cols-1 md:grid-cols-2 lg:grid-cols-3',
-  CONTAINER: 'max-w-7xl mx-auto p-6',
-  SEARCH_INPUT: 'w-full px-4 py-3 pl-10 rounded-lg border border-gray-300 focus:outline-none focus:none focus:border-transparent shadow-lg',
-  FILTER_BUTTON: 'px-4 py-2 text-sm font-medium rounded-md transition-colors duration-200',
-  FILTER_BUTTON_ACTIVE: 'bg-gray-300 text-gray-500',
-  FILTER_BUTTON_INACTIVE: 'bg-gray-100 text-gray-500 hover:bg-gray-200 hover:text-gray-700',
-} as const;
+

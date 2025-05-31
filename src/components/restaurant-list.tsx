@@ -3,7 +3,7 @@
 import React from 'react';
 import { ErrorDisplay, LoadingSpinner, RestaurantCard, SearchAndFilter } from '~/components/ui';
 import { useRestaurantsWithFilters } from '~/hooks/use-restaurants-with-filters';
-import { UI_MESSAGES, CSS_CLASSES } from '~/constants';
+import { UI_MESSAGES } from '~/constants';
 import { type Restaurant } from '~/types';
 
 export function RestaurantList() {
@@ -17,7 +17,8 @@ export function RestaurantList() {
     handleFavoriteToggle,
     handleSearchChange,
     handleCategoryChange,
-    refetch
+    refetch,
+    getRestaurantToggleState
   } = useRestaurantsWithFilters();
 
   if (isLoading) {
@@ -34,7 +35,7 @@ export function RestaurantList() {
   }
 
   return (
-    <div className={CSS_CLASSES.CONTAINER}>
+    <div className="max-w-7xl mx-auto p-6">
       <div className="text-center mb-8">
         <h1 className="text-4xl font-bold text-gray-900 mb-2">Restaurants</h1>
       </div>
@@ -55,13 +56,13 @@ export function RestaurantList() {
             : 'No restaurants found.'}
         </div>
       ) : (
-        <div className={CSS_CLASSES.GRID}>
+        <div className="grid gap-6 grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
           {filteredRestaurants.map((restaurant: Restaurant) => (
             <RestaurantCard
               key={restaurant.id}
               restaurant={restaurant}
               onFavoriteToggle={handleFavoriteToggle}
-              isLoading={isToggling}
+              isLoading={getRestaurantToggleState(restaurant.id)}
             />
           ))}
         </div>
