@@ -79,11 +79,11 @@ export const RestaurantCard: React.FC<RestaurantCardProps> = ({
         )}
         
         {/* Restaurant Name and Rating Row */}
-        <div className="flex justify-between items-start mb-2">
-          <h3 className="text-lg font-semibold text-gray-900 flex-1 mr-2">{restaurant.name}</h3>
+        <div className="flex justify-between items-center mb-2">
+          <h3 className="text-md font-semibold text-gray-900 flex-1 mr-2">{restaurant.name}</h3>
           <div className="flex items-center text-sm">
             <span className="text-yellow-500 mr-1">★</span>
-            <span className="font-medium text-gray-900">{restaurant.rating}</span>
+            <span className="font-normal text-gray-900">{restaurant.rating}</span>
             <span className="text-gray-500 ml-1">({restaurant.rating_count})</span>
           </div>
         </div>
@@ -91,17 +91,13 @@ export const RestaurantCard: React.FC<RestaurantCardProps> = ({
         {/* Description */}
         <p className="text-gray-600 text-sm mb-3 line-clamp-2">{restaurant.desc}</p>
         
-        {/* Category and Location */}
-        <div className="flex justify-between items-center mb-2">
-          <span className={CSS_CLASSES.BADGE_CATEGORY}>
-            {formatCategory(restaurant.category)}
-          </span>
-          <span className="text-xs text-gray-500">{formatCity(restaurant.city)}</span>
-        </div>
-        
-        {/* Price Range */}
-        <div className="text-sm text-gray-600 font-medium">
-          {restaurant.price_range}
+        {/* Location, Category, and Price Range */}
+        <div className="text-xs text-gray-500 mb-2">
+          <span>{formatCity(restaurant.city)}</span>
+          <span className="mx-1">·</span>
+          <span>{formatCategory(restaurant.category)}</span>
+          <span className="mx-1">·</span>
+          <span>{restaurant.price_range}</span>
         </div>
       </div>
     </div>
