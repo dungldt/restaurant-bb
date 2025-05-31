@@ -21,13 +21,13 @@ async function main() {
       category: "TEMPURA" as const,
       city: "YOKOHAMA",
       location: "Yokohama",
-      priceRange: "5~7",
+      priceRange: "25,000 ~ 35,000 won",
       images: [
-        "https://images.unsplash.com/photo-1673238104258-38b63f973848?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.1.0"
+        "https://plus.unsplash.com/premium_photo-1667807522245-ae3de2a7813a?q=80&w=2150&auto=format&fit=crop&ixlib=rb-4.1.0"
       ],
       featured: {
         text: "Recommended Yokohama Tempura",
-        icon: "stars-02"
+        icon: "flame"
       }
     },
     {
@@ -38,13 +38,13 @@ async function main() {
       category: "SUSHI" as const,
       city: "SAPPORO",
       location: "Sapporo",
-      priceRange: "4~6",
+      priceRange: "20,000 ~ 30,000 won",
       images: [
         "https://plus.unsplash.com/premium_photo-1668146932065-d08643791942?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.1.0"
       ],
       featured: {
         text: "Sapporo Sushi Restaurant",
-        icon: "stars-02"
+        icon: "crown"
       }
     },
     {
@@ -55,13 +55,13 @@ async function main() {
       category: "RAMEN" as const,
       city: "KYOTO",
       location: "Kyoto",
-      priceRange: "2~4",
+      priceRange: "8,000 ~ 12,000 won",
       images: [
         "https://images.unsplash.com/photo-1591325418441-ff678baf78ef?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.1.0"
       ],
       featured: {
         text: "Kyoto's best ramen spots",
-        icon: "stars-02"
+        icon: "sparkles"
       }
     },
     {
@@ -72,13 +72,13 @@ async function main() {
       category: "SOBA" as const,
       city: "FUKUOKA",
       location: "Fukuoka",
-      priceRange: "2~4",
+      priceRange: "6,000 ~ 10,000 won",
       images: [
         "https://images.unsplash.com/photo-1611810175414-1ea054685162?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.1.0"
       ],
       featured: {
         text: "Fukuoka Udon Restaurant",
-        icon: "stars-02"
+        icon: "sparkles"
       }
     },
     {
@@ -89,13 +89,13 @@ async function main() {
       category: "SUSHI" as const,
       city: "TOKYO",
       location: "Tokyo",
-      priceRange: "4~6",
+      priceRange: "30,000 ~ 45,000 won",
       images: [
         "https://images.unsplash.com/photo-1611143669185-af224c5e3252?q=80&w=1887&auto=format&fit=crop&ixlib=rb-4.0.3"
       ],
       featured: {
         text: "Top Sushi Restaurants in Tokyo",
-        icon: "stars-02"
+        icon: "trophy"
       }
     },
     {
@@ -106,13 +106,13 @@ async function main() {
       category: "RAMEN" as const,
       city: "HIROSHIMA",
       location: "Hiroshima",
-      priceRange: "2~4",
+      priceRange: "7,000 ~ 11,000 won",
       images: [
         "https://images.unsplash.com/photo-1569718212165-3a8278d5f624?q=80&w=1887&auto=format&fit=crop&ixlib=rb-4.0.3"
       ],
       featured: {
         text: "Hiroshima Ramen Recommendations",
-        icon: "stars-02"
+        icon: "sparkles"
       }
     }
   ]

@@ -1,20 +1,24 @@
 'use client';
 
 import React from 'react';
-import { ErrorDisplay, LoadingSpinner, RestaurantCard } from '~/components/ui';
-import { useRestaurants } from '~/hooks/use-restaurants';
+import { ErrorDisplay, LoadingSpinner, RestaurantCard, SearchAndFilter } from '~/components/ui';
+import { useRestaurantsWithFilters } from '~/hooks/use-restaurants-with-filters';
 import { UI_MESSAGES, CSS_CLASSES } from '~/constants';
 import { type Restaurant } from '~/types';
 
 export function RestaurantList() {
   const {
-    restaurants,
+    filteredRestaurants,
     isLoading,
     error,
     isToggling,
+    searchQuery,
+    selectedCategory,
     handleFavoriteToggle,
+    handleSearchChange,
+    handleCategoryChange,
     refetch
-  } = useRestaurants();
+  } = useRestaurantsWithFilters();
 
   if (isLoading) {
     return <LoadingSpinner message={UI_MESSAGES.LOADING_RESTAURANTS} />;
@@ -29,30 +33,39 @@ export function RestaurantList() {
     );
   }
 
-  if (!restaurants || restaurants.length === 0) {
-    return (
-      <div className={CSS_CLASSES.CONTAINER}>
-        <h1 className="text-3xl font-bold mb-6">Restaurants</h1>
-        <div className="text-center text-gray-500 py-8">
-          No restaurants found.
-        </div>
-      </div>
-    );
-  }
-
   return (
     <div className={CSS_CLASSES.CONTAINER}>
-      <h1 className="text-3xl font-bold mb-6">Restaurants</h1>
-      <div className={CSS_CLASSES.GRID}>
-        {restaurants.map((restaurant: Restaurant) => (
-          <RestaurantCard
-            key={restaurant.id}
-            restaurant={restaurant}
-            onFavoriteToggle={handleFavoriteToggle}
-            isLoading={isToggling}
-          />
-        ))}
+      <div className="text-center mb-8">
+        <h1 className="text-4xl font-bold text-gray-900 mb-2">Restaurants</h1>
       </div>
+      
+      {/* Search and Filter Section */}
+      <SearchAndFilter
+        searchQuery={searchQuery}
+        onSearchChange={handleSearchChange}
+        selectedCategory={selectedCategory}
+        onCategoryChange={handleCategoryChange}
+      />
+
+      {/* Results Section */}
+      {filteredRestaurants.length === 0 ? (
+        <div className="text-center text-gray-500 py-8">
+          {searchQuery || selectedCategory !== 'ALL'
+            ? 'No restaurants found matching your criteria.'
+            : 'No restaurants found.'}
+        </div>
+      ) : (
+        <div className={CSS_CLASSES.GRID}>
+          {filteredRestaurants.map((restaurant: Restaurant) => (
+            <RestaurantCard
+              key={restaurant.id}
+              restaurant={restaurant}
+              onFavoriteToggle={handleFavoriteToggle}
+              isLoading={isToggling}
+            />
+          ))}
+        </div>
+      )}
     </div>
   );
 }
