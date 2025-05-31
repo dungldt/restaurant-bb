@@ -1,7 +1,6 @@
 import React from 'react';
 import { type RestaurantCardProps } from '~/types';
 import {
-  formatCity,
   getPrimaryImage,
   isFeaturedRestaurant,
   getFeaturedText,
@@ -98,7 +97,7 @@ export const RestaurantCard: React.FC<RestaurantCardProps> = ({
         
         {/* Location, Category, and Price Range */}
         <div className="text-sm text-gray-500 mb-2">
-          <span className='uppercase'>{formatCity(restaurant.city)}</span>
+          <span className='uppercase'>{restaurant.city}</span>
           <span className="mx-1">·</span>
           <span>{formatCategory(restaurant.category)}</span>
           <span className="mx-1">·</span>

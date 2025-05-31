@@ -75,13 +75,6 @@ export const capitalize = (str: string): string => {
 };
 
 /**
- * Format city name for display (capitalize first letter)
- */
-export const formatCity = (city: string): string => {
-  return city.charAt(0).toUpperCase() + city.slice(1).toLowerCase();
-};
-
-/**
  * Gets optimized image URLs for different screen sizes
  */
 export const getOptimizedImageSrcSet = (imageUrl: string): string => {
