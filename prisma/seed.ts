@@ -162,7 +162,7 @@ async function main() {
       images: [
         "https://images.unsplash.com/photo-1551218808-94e220e084d2?q=80&w=2274&auto=format&fit=crop&ixlib=rb-4.0.3"
       ],
-      featured: null
+      featured: undefined
     },
     {
       name: "Sukiyaki Ningyocho Imahan",
@@ -193,7 +193,7 @@ async function main() {
       images: [
         "https://images.unsplash.com/photo-1555126634-323283e090fa?q=80&w=2264&auto=format&fit=crop&ixlib=rb-4.0.3"
       ],
-      featured: null
+      featured: undefined
     },
     {
       name: "Okonomiyaki Mizuno",
@@ -224,7 +224,7 @@ async function main() {
       images: [
         "https://images.unsplash.com/photo-1618889482923-38250401a84e?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.1.0"
       ],
-      featured: null
+      featured: undefined
     },
     {
       name: "Kaiseki Kikunoi",
@@ -255,7 +255,7 @@ async function main() {
       images: [
         "https://images.unsplash.com/photo-1544025162-d76694265947?q=80&w=2169&auto=format&fit=crop&ixlib=rb-4.0.3"
       ],
-      featured: null
+      featured: undefined
     },
     {
       name: "Teppanyaki Ginza Ukai-tei",
@@ -286,7 +286,7 @@ async function main() {
       images: [
         "https://images.unsplash.com/photo-1586190848861-99aa4a171e90?q=80&w=2080&auto=format&fit=crop&ixlib=rb-4.0.3"
       ],
-      featured: null
+      featured: undefined
     },
     {
       name: "Yakiniku M",
@@ -317,7 +317,7 @@ async function main() {
       images: [
         "https://images.unsplash.com/photo-1544025162-d76694265947?q=80&w=2169&auto=format&fit=crop&ixlib=rb-4.0.3"
       ],
-      featured: null
+      featured: undefined
     },
     {
       name: "Cafe Gram",
@@ -348,7 +348,7 @@ async function main() {
       images: [
         "https://images.unsplash.com/photo-1551218808-94e220e084d2?q=80&w=2274&auto=format&fit=crop&ixlib=rb-4.0.3"
       ],
-      featured: null
+      featured: undefined
     },
     {
       name: "Washoku Sato",
@@ -362,7 +362,7 @@ async function main() {
       images: [
         "https://images.unsplash.com/photo-1617196034796-73dfa7b1fd56?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3"
       ],
-      featured: null
+      featured: undefined
     }
   ]
 
