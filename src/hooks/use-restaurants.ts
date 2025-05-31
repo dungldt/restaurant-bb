@@ -77,19 +77,28 @@ export const useRestaurants = (): UseRestaurantsReturn => {
 
   const addFavoriteMutation = api.restaurant.addFavorite.useMutation({
     onSuccess: (data, variables) => {
-      // Remove optimistic state once confirmed
-      setOptimisticFavorites(prev => {
-        const next = new Map(prev);
-        next.delete(variables.restaurantId);
-        return next;
-      });
-      setTogglingRestaurants(prev => {
-        const next = new Set(prev);
-        next.delete(variables.restaurantId);
-        return next;
-      });
+      // Show toast immediately
       showToast(UI_MESSAGES.RESTAURANT_ADDED_TO_FAVORITES, 'success', 2000);
-      utils.restaurant.getRestaurants.invalidate();
+      
+      // Disappear Loader2 shortly after toast appears (small delay for UX smoothness)
+      setTimeout(async () => {
+        // First invalidate to get fresh server state
+        await utils.restaurant.getRestaurants.invalidate();
+        
+        // Then clear optimistic state and toggling state together
+        // This ensures we go directly from Loader2 to correct final state
+        setOptimisticFavorites(prev => {
+          const newMap = new Map(prev);
+          newMap.delete(variables.restaurantId);
+          return newMap;
+        });
+        
+        setTogglingRestaurants(prev => {
+          const newSet = new Set(prev);
+          newSet.delete(variables.restaurantId);
+          return newSet;
+        });
+      }, 200); // Short delay after toast appears for smooth UX
     },
     onError: (error, variables) => {
       console.error(UI_MESSAGES.ERROR_TOGGLING_FAVORITE, error);
@@ -110,19 +119,28 @@ export const useRestaurants = (): UseRestaurantsReturn => {
 
   const removeFavoriteMutation = api.restaurant.removeFavorite.useMutation({
     onSuccess: (data, variables) => {
-      // Remove optimistic state once confirmed
-      setOptimisticFavorites(prev => {
-        const next = new Map(prev);
-        next.delete(variables.restaurantId);
-        return next;
-      });
-      setTogglingRestaurants(prev => {
-        const next = new Set(prev);
-        next.delete(variables.restaurantId);
-        return next;
-      });
+      // Show toast immediately
       showToast(UI_MESSAGES.RESTAURANT_REMOVED_FROM_FAVORITES, 'success', 2000);
-      utils.restaurant.getRestaurants.invalidate();
+      // Disappear Loader2 shortly after toast appears (small delay for UX smoothness)
+      setTimeout(async () => {
+        
+        // First invalidate to get fresh server state
+        await utils.restaurant.getRestaurants.invalidate();
+        
+        // Then clear optimistic state and toggling state together
+        // This ensures we go directly from Loader2 to correct final state
+        setOptimisticFavorites(prev => {
+          const newMap = new Map(prev);
+          newMap.delete(variables.restaurantId);
+          return newMap;
+        });
+        
+        setTogglingRestaurants(prev => {
+          const newSet = new Set(prev);
+          newSet.delete(variables.restaurantId);
+          return newSet;
+        });
+      }, 200); // Short delay after toast appears for smooth UX
     },
     onError: (error, variables) => {
       console.error(UI_MESSAGES.ERROR_TOGGLING_FAVORITE, error);
@@ -143,6 +161,8 @@ export const useRestaurants = (): UseRestaurantsReturn => {
 
   const handleFavoriteToggle = useCallback(async (restaurantId: string, currentIsFavorite: boolean) => {
     const targetState = !currentIsFavorite;
+    // Set toggling state IMMEDIATELY when user clicks
+    setTogglingRestaurants(prev => new Set(prev).add(restaurantId));
     
     // Apply optimistic update immediately
     setOptimisticFavorites(prev => {
@@ -159,8 +179,6 @@ export const useRestaurants = (): UseRestaurantsReturn => {
 
     // Set up debounced API call
     const timeoutId = setTimeout(async () => {
-      setTogglingRestaurants(prev => new Set(prev).add(restaurantId));
-      
       try {
         if (targetState) {
           await addFavoriteMutation.mutateAsync({ restaurantId });

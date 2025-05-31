@@ -21,6 +21,18 @@ export function RestaurantList() {
     getRestaurantToggleState
   } = useRestaurantsWithFilters();
 
+  // Handle favorite click for individual restaurant
+  const handleRestaurantFavoriteClick = (restaurant: Restaurant) => async (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    
+    try {
+      await handleFavoriteToggle(restaurant.id, restaurant.isFavorite);
+    } catch (error) {
+      console.error('Error toggling favorite:', error);
+    }
+  };
+
   if (isLoading) {
     return <LoadingSpinner message={UI_MESSAGES.LOADING_RESTAURANTS} />;
   }
@@ -61,8 +73,8 @@ export function RestaurantList() {
             <RestaurantCard
               key={restaurant.id}
               restaurant={restaurant}
-              onFavoriteToggle={handleFavoriteToggle}
-              isLoading={getRestaurantToggleState(restaurant.id)}
+              onFavoriteClick={handleRestaurantFavoriteClick(restaurant)}
+              isToggling={getRestaurantToggleState(restaurant.id)}
             />
           ))}
         </div>
