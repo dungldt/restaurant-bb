@@ -1,11 +1,11 @@
 import { type Restaurant, type RestaurantFeatured } from '~/types';
-import { CATEGORY_DISPLAY_NAMES } from '~/constants';
+import { textByStoreCategory } from '~/constants';
 
 /**
  * Formats the restaurant category for display
  */
 export const formatCategory = (category: Restaurant['category']): string => {
-  return CATEGORY_DISPLAY_NAMES[category] || category;
+  return textByStoreCategory[category] || category;
 };
 
 /**
@@ -45,9 +45,26 @@ export const formatPriceRange = (priceRange: string): string => {
 
 /**
  * Gets the primary image URL for a restaurant
+ * Optimizes Unsplash URLs for better performance
  */
 export const getPrimaryImage = (images: string[]): string | null => {
-  return images.length > 0 ? images[0] : null;
+  if (images.length === 0) return null;
+  
+  const primaryImage = images[0];
+  
+  // Optimize Unsplash URLs for better performance
+  if (primaryImage.includes('unsplash.com')) {
+    // Add/modify Unsplash URL parameters for optimal loading
+    const url = new URL(primaryImage);
+    url.searchParams.set('auto', 'format');
+    url.searchParams.set('fit', 'crop');
+    url.searchParams.set('w', '800'); // Reasonable width for cards
+    url.searchParams.set('h', '400'); // 2:1 aspect ratio
+    url.searchParams.set('q', '80'); // Good quality/size balance
+    return url.toString();
+  }
+  
+  return primaryImage;
 };
 
 /**
@@ -62,4 +79,42 @@ export const capitalize = (str: string): string => {
  */
 export const formatCity = (city: string): string => {
   return city.charAt(0).toUpperCase() + city.slice(1).toLowerCase();
+};
+
+/**
+ * Gets optimized image URLs for different screen sizes
+ */
+export const getOptimizedImageSrcSet = (imageUrl: string): string => {
+  if (!imageUrl.includes('unsplash.com')) {
+    return imageUrl;
+  }
+
+  const url = new URL(imageUrl);
+  const sizes = [400, 600, 800, 1200];
+  
+  const srcSet = sizes.map(size => {
+    const optimizedUrl = new URL(imageUrl);
+    optimizedUrl.searchParams.set('auto', 'format');
+    optimizedUrl.searchParams.set('fit', 'crop');
+    optimizedUrl.searchParams.set('w', size.toString());
+    optimizedUrl.searchParams.set('h', (size / 2).toString()); // 2:1 aspect ratio
+    optimizedUrl.searchParams.set('q', '80');
+    return `${optimizedUrl.toString()} ${size}w`;
+  }).join(', ');
+
+  return srcSet;
+};
+
+/**
+ * Gets a placeholder image URL for loading states
+ */
+export const getImagePlaceholder = (width: number = 400, height: number = 200): string => {
+  return `data:image/svg+xml;base64,${Buffer.from(
+    `<svg width="${width}" height="${height}" xmlns="http://www.w3.org/2000/svg">
+      <rect width="100%" height="100%" fill="#f3f4f6"/>
+      <text x="50%" y="50%" font-family="sans-serif" font-size="14" fill="#9ca3af" text-anchor="middle" dy=".3em">
+        Loading...
+      </text>
+    </svg>`
+  ).toString('base64')}`;
 };
