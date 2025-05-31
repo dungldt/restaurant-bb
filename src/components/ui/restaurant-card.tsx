@@ -86,7 +86,7 @@ export const RestaurantCard: React.FC<RestaurantCardProps> = ({
         
         {/* Restaurant Name and Rating Row */}
         <div className="flex justify-between items-center mb-2">
-          <h3 className="text-md text-gray-900 flex-1 mr-2">{restaurant.name}</h3>
+          <h3 className="text-md font-semibold text-gray-900 flex-1 mr-2">{restaurant.name}</h3>
           <div className="flex items-center text-sm">
             <span className="text-yellow-500 mr-1">★</span>
             <span className="text-gray-500">{restaurant.rating}</span>
