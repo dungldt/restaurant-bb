@@ -34,11 +34,11 @@ export const getFeaturedText = (featured: RestaurantFeatured | null): string => 
  * Formats price range for display
  */
 export const formatPriceRange = (priceRange: string): string => {
-  // Convert "3~5" to "¥3,000~¥5,000" or similar formatting
+  // Convert "25~35" to "25,000 ~ 35,000 won" for display
   const parts = priceRange.split('~');
   if (parts.length === 2) {
-    const [min, max] = parts;
-    return `¥${min}k~¥${max}k`;
+    const [min, max] = parts.map(p => p.trim());
+    return `${min},000 ~ ${max},000 won`;
   }
   return priceRange;
 };
@@ -72,13 +72,6 @@ export const getPrimaryImage = (images: string[]): string | null => {
  */
 export const capitalize = (str: string): string => {
   return str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
-};
-
-/**
- * Format city name for display (capitalize first letter)
- */
-export const formatCity = (city: string): string => {
-  return city.charAt(0).toUpperCase() + city.slice(1).toLowerCase();
 };
 
 /**
